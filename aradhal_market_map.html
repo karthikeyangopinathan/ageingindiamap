@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aradhal · Silver Economy Market Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b1b1a;--ink-soft:#5f5d58;--ink-faint:#9a978f;
+    --paper:#ffffff;--panel:#fbfaf7;--hair:#e9e6df;--hair-strong:#dcd8cf;
+    --signal:#F7941E;--signal-ink:#b5650a;
+    font-synthesis:none;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Figtree",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  body{line-height:1.45}
+  .wrap{max-width:1340px;margin:0 auto;padding:24px 22px 70px}
+  .brand{display:flex;align-items:baseline;gap:11px}
+  .mark{width:38px;height:19px;flex:none}
+  h1{font-size:19px;font-weight:800;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--ink-soft);font-size:13px;margin:5px 0 0;max-width:86ch}
+  .caveat{margin:14px 0 0;background:#fff7ec;border:1px solid #f6dcb4;border-left:3px solid var(--signal);
+    border-radius:9px;padding:9px 12px;font-size:12px;color:#8a5a12;line-height:1.5}
+  .filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:18px 0 6px}
+  .filters .lab{font-size:11px;font-weight:800;color:var(--ink-faint);margin-right:2px}
+  .chip{appearance:none;font:inherit;font-size:12px;font-weight:600;border:1px solid var(--hair-strong);background:#fff;
+    color:var(--ink-soft);border-radius:999px;padding:5px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .chip i{width:9px;height:9px;border-radius:50%}
+  .chip:hover{border-color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip[aria-pressed="true"] i{outline:1px solid #fff}
+
+  .layout{display:grid;grid-template-columns:1fr 340px;gap:22px;margin-top:12px}
+  @media(max-width:1040px){.layout{grid-template-columns:1fr}}
+  .stack{display:flex;flex-direction:column;gap:10px}
+  .layer{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:stretch;background:var(--paper);
+    border:1px solid var(--hair);border-radius:13px;padding:12px;border-left-width:5px}
+  .layer .lh{display:flex;flex-direction:column;justify-content:center}
+  .layer .lh .ln{font-size:13.5px;font-weight:800}
+  .layer .lh .lt{font-size:11px;color:var(--ink-faint);margin-top:3px;line-height:1.35}
+  .cards{display:flex;flex-wrap:wrap;gap:7px;align-content:flex-start}
+  .pcard{appearance:none;text-align:left;font:inherit;background:var(--panel);border:1px solid var(--hair);
+    border-radius:9px;padding:7px 10px;cursor:pointer;max-width:230px;transition:transform .1s,border-color .12s}
+  .pcard:hover{border-color:var(--ink-soft);transform:translateY(-1px)}
+  .pcard.sel{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .pcard .pn{font-size:12.5px;font-weight:700;line-height:1.2}
+  .pcard .pe{font-size:10.5px;color:var(--ink-faint);margin-top:2px}
+  .pcard.dim{opacity:.28}
+  .pcard:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+  aside{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:14px}
+  .card{background:var(--panel);border:1px solid var(--hair);border-radius:13px;padding:15px}
+  .card h2{font-size:12px;font-weight:800;color:var(--ink-soft);margin:0 0 9px;letter-spacing:.01em}
+  .kicker{font-size:11.5px;color:var(--ink-faint);margin:0 0 9px;line-height:1.5}
+  #detailHead{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;margin:0 0 3px}
+  #detailHead .d{width:11px;height:11px;border-radius:50%;flex:none}
+  .meta{font-size:12px;color:var(--ink-soft);margin:0 0 11px;line-height:1.45}
+  .mini{font-size:11px;color:var(--ink-faint);font-weight:800;margin:12px 0 6px}
+  .exlist{display:flex;flex-wrap:wrap;gap:5px}
+  .ex{font-size:11px;font-weight:600;border:1px solid var(--hair-strong);background:#fff;border-radius:6px;padding:2px 8px;color:var(--ink-soft)}
+  .ins{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .ins li{font-size:12px;color:var(--ink);line-height:1.45;padding-left:14px;position:relative}
+  .ins li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--signal)}
+  .tagrow{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+  .tg{font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 9px}
+
+  .forces{margin-top:30px}
+  .forces h2.sec{font-size:14px;font-weight:800;margin:0 0 4px}
+  .forces p.seclead{font-size:12.5px;color:var(--ink-soft);margin:0 0 14px;max-width:80ch}
+  .fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+  .fcard{background:var(--paper);border:1px solid var(--hair);border-radius:12px;padding:13px 14px}
+  .fcard h3{font-size:13px;font-weight:800;margin:0 0 7px;display:flex;align-items:center;gap:7px}
+  .fcard h3 i{width:8px;height:8px;border-radius:2px;flex:none}
+  .fcard ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+  .fcard li{font-size:11.5px;color:var(--ink-soft);line-height:1.45;padding-left:12px;position:relative}
+  .fcard li::before{content:"–";position:absolute;left:0;color:var(--ink-faint)}
+  .foot{font-size:11.5px;color:var(--ink-faint);margin-top:24px;line-height:1.55}
+  .foot b{color:var(--ink-soft)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 40 20" aria-hidden="true"><path d="M2 18 A 18 18 0 0 1 38 18" fill="none" stroke="var(--signal)" stroke-width="4" stroke-linecap="round"/></svg>
+    <h1>Silver economy market map</h1>
+  </div>
+  <p class="sub">The players and forces from the 7th ASLI Ageing Fest, organised as the full value chain — including the <b>Policy</b> and <b>Capital</b> layers the earlier canvases only gestured at. Click any player type for its role, real examples and the intelligence behind it. Filter by where it sits on the care continuum.</p>
+  <div class="caveat">Figures below come from the conference's own session notes and are internally inconsistent in places (e.g. “167 million (69 crore)”, a questioned ~18% IRR). Treat every number as directional, not a verified market fact.</div>
+
+  <div class="filters" id="contFilter">
+    <span class="lab">Care continuum:</span>
+  </div>
+
+  <div class="layout">
+    <div class="stack" id="stack"></div>
+    <aside>
+      <div class="card" id="detail">
+        <div id="detailHead">How to read this</div>
+        <p class="meta" id="detailMeta">Seven layers, top to bottom: who sets the rules, who funds it, who routes demand, who builds the workforce, who delivers care, who pays, and who receives. Click a card for detail.</p>
+        <div id="detailBody">
+          <p class="mini">Maps to your earlier canvases</p>
+          <ul class="ins">
+            <li><b>Payers</b> are the axes of your buyer quadrant (capacity × presence).</li>
+            <li><b>Providers &amp; enhancers</b> are the competitive field behind the cards on your opportunity canvas.</li>
+            <li><b>Policy</b> and <b>Capital</b> are the two layers the value-chain lens was missing — the report fills them in.</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="forces">
+    <h2 class="sec">Forces &amp; frameworks</h2>
+    <p class="seclead">The cross-cutting intelligence that doesn't belong to any single layer — the structural pressures, the frameworks the sector is converging on, and the hard numbers (directional only).</p>
+    <div class="fgrid" id="forces"></div>
+  </div>
+
+  <p class="foot" id="foot"></p>
+</div>
+
+<script>
+const CONT=[
+ {id:'prevention',lab:'Prevention & planning',c:'#4FB63C'},
+ {id:'home',lab:'Home & primary care',c:'#16C2B3'},
+ {id:'assisted',lab:'Assisted & residential',c:'#3B82E0'},
+ {id:'acute',lab:'High-acuity & clinical',c:'#EA3B2E'},
+ {id:'estate',lab:'End-of-life & estate',c:'#7C4DD6'}];
+const contById=Object.fromEntries(CONT.map(c=>[c.id,c]));
+const THEME={1:'Funding',2:'Coordination',3:'Ageing-at-home',4:'Mobility',5:'Emotional',6:'Purpose',7:'Standards/data',8:'Institutional'};
+const THEMEC={1:'#3B82E0',2:'#F7941E',3:'#16C2B3',4:'#EA3B2E',5:'#EC4899',6:'#7C4DD6',7:'#4FB63C',8:'#8a826f'};
+
+const LAYERS=[
+ {id:'policy',name:'Policy & regulation',color:'#6b6256',tag:'Who sets the rules, recognition and incentives',players:[
+   {name:'Industry self-regulation body',role:'Sets the standards agenda, lobbies for sector recognition, compiles policy asks for ministries.',ex:['ASLI — 90+ members, 5 policy priorities','8th edition → Hyderabad'],themes:[7,8],cont:['prevention','home','assisted','acute','estate'],ins:['Five asks: formal sector recognition; model guidelines; insurance for care; revive reverse mortgage; skilled-workforce pathways.','Plans regional huddles + a Knowledge Series (licensing, GST, manpower, quality).']},
+   {name:'National planning / think-tank',role:'National recognition, cross-ministry coordination, workforce diplomacy.',ex:['Niti Aayog — supportive','~200–300 carers sent to Japan'],themes:[8],cont:['assisted','acute'],ins:['ASLI in active dialogue to push national recognition + classify senior care as priority infrastructure.']},
+   {name:'Insurance regulator',role:'Product rules, zero-cost distribution, long-horizon coverage mandates.',ex:['IRDAI — Bima platform','“Insurance for All 2047”','Commission consultation paper'],themes:[1,8],cont:['prevention','acute'],ins:['Current products hospitalisation-centric; seniors an afterthought.','“Insurance for All 2047” seen as more consequential than the commission paper for senior coverage.']},
+   {name:'State government',role:'Land/building classification and developer–operator–consumer incentives.',ex:['Maharashtra — first to classify senior living as a building category'],themes:[8],cont:['assisted'],ins:['Tier-1 developers began enquiring once the policy took effect.','Ask: replicate the Maharashtra model nationally via Niti Aayog.']},
+   {name:'Workforce & education policy',role:'Qualification frameworks, school curriculum, caregiver career ladders.',ex:['NSQF L1–6/7','NCERT caregiving (Class 10 & 12)','PMO caregiver forum','15 colleges B.Voc'],themes:[7],cont:['home','assisted','acute'],ins:['OJT now mandatory for caregiving programs.','Dedicated aged-care ministry (Australia model) framed as a long-term goal.']}
+ ]},
+ {id:'capital',name:'Capital',color:'#15a99b',tag:'Who funds it — and how they exit',players:[
+   {name:'Family offices',role:'The most natural early-stage backers: founder-conviction, open-network, heart-driven.',ex:['(cited as the earliest natural capital)'],themes:[1],cont:['assisted','home'],ins:['Patient capital, no fixed exit; 5–7yr view common.']},
+   {name:'Healthcare / growth PE',role:'Scale capital once unit economics are proven.',ex:['Healthcare PE track record'],themes:[1],cont:['assisted','acute'],ins:['Healthcare PE has delivered 2–3x over 3–5yr, building investor confidence in the adjacency.']},
+   {name:'Patient-capital VCs',role:'Long-horizon, outcome-driven, no exit pressure.',ex:['Rainmatter Health (7–10yr)','Lumis Partners','Somerset Indus','Skateboat','Morgan Stanley India Infra (MSII)','Indium Capital'],themes:[1],cont:['home','prevention'],ins:['Institutional investors hunt operating models, not pure real estate (MSII searched 7–8yrs).','Signal they want: outcome- not feature-driven; sustainable unit economics; how many of the first 100 customers brought the next 50.']},
+   {name:'Pension & sovereign funds',role:'Annuity-cash-flow buyers; likely to enter early.',ex:['Canadian pension funds','Sovereign wealth funds'],themes:[1],cont:['assisted'],ins:['Love acyclical, need-based cash flows: “on Jan 1 you know what you’ll make on Dec 31”.']},
+   {name:'Insurers as investors',role:'Integrate insurance + real estate + care in one stack.',ex:['China model (insurer-led)'],themes:[1,8],cont:['assisted','acute'],ins:['In China, two insurers pioneered the integrated model; government then mandated others to follow.']},
+   {name:'Strategic / corporate',role:'Hospitals and developers entering for adjacency and pipeline.',ex:['Hospital groups','Developers'],themes:[8],cont:['acute','assisted'],ins:['Precedent + pipeline (step-down patients) draw strategic capital.']},
+   {name:'REITs (future)',role:'Later-stage exit once annuity profile matures.',ex:['S. Africa’s largest REIT now entering'],themes:[1],cont:['assisted'],ins:['Near-term unlikely in India — asset-heavy but not annuity-pure; healthcare framing preferred over real-estate/hospitality.']},
+   {name:'Social financing platforms',role:'Under-appreciated insurance-like risk-pooling.',ex:['Ketto','Milaap'],themes:[1],cont:['acute'],ins:['Floated as a complement where formal insurance is absent.']}
+ ]},
+ {id:'channel',name:'Channels & aggregators',color:'#3B82E0',tag:'Who routes demand and supply',players:[
+   {name:'Real-estate developers',role:'Provide the asset; the dominant (and distorting) force.',ex:['Ashiana','Antara','Golden Planet','Primus','Prestige','Embassy','Naiknavare'],themes:[3,8],cont:['assisted'],ins:['89% of built real estate is residential — financing is overwhelmingly short-term build-and-sell, the wrong shape for care.']},
+   {name:'Hospital chains',role:'Clinical interface + step-down patient referral.',ex:['Apollo','Manipal'],themes:[4,2],cont:['acute'],ins:['Hospitals want lower ALOS → step-down beds; falls/rehospitalisation data attracts clinician referrals.']},
+   {name:'Insurance distribution / TPAs',role:'Reach + claims rails for any paid-care product.',ex:['Medi Assist','Bima'],themes:[1,8],cont:['acute'],ins:['Zero-cost distribution (Bima) is the lever for senior coverage at scale.']},
+   {name:'Discharge desks',role:'The high-risk hospital→home transition point.',ex:['Hospital discharge desks'],themes:[2,8],cont:['acute'],ins:['Closed-loop institution-to-home referral is weak today — an acquisition channel hiding in plain sight.']},
+   {name:'RWAs / communities / corporate concierge',role:'Aggregate demand through where people already belong.',ex:['Google / PepsiCo / Amex concierge benefits'],themes:[8,2],cont:['prevention','home'],ins:['Corporate concierge cited as a first step to stagger care costs for employees.']},
+   {name:'Education pipeline',role:'Routes workforce supply into the sector.',ex:['B.Voc colleges','vocational schools'],themes:[7],cont:['home','assisted'],ins:['Apprenticeship-degree program in development; pipeline is a retention strategy for operators.']}
+ ]},
+ {id:'enabler',name:'Enablers: workforce & standards',color:'#F7941E',tag:'Who makes care deliverable and trustworthy (your “Service Enabler” box)',players:[
+   {name:'Skill councils',role:'Define competencies, localise content, certify trainers.',ex:['Home Management & Care Givers Sector Skill Council'],themes:[7],cont:['home','assisted','acute'],ins:['20–25% of content modifiable for region/industry without formal approval.']},
+   {name:'Accreditation / standards bodies',role:'Objective quality standards and accreditation.',ex:['QAI — 20+ standards over 7 years'],themes:[7],cont:['home','assisted','acute'],ins:['RUMBA test: Reasonable, Understandable, Measurable, Beneficial, Achievable.','Quality framed two-way: top-down leadership + bottom-up ownership.']},
+   {name:'Workforce exporters / trainers',role:'Global career pathways that make caregiving aspirational.',ex:['Sompo — India→Japan, ~70 now, target 1,000'],themes:[7],cont:['home','acute'],ins:['Returnees positioned as future leaders of India’s care industry.']},
+   {name:'Formalisation / RPL',role:'Bring informal caregivers into the formal, waged workforce.',ex:['Recognition of Prior Learning'],themes:[7],cont:['home'],ins:['Minimum wage insufficient for caregivers; hidden cost of informal care (family productivity) rarely counted.']}
+ ]},
+ {id:'provider',name:'Providers & enhancers',color:'#EA3B2E',tag:'Who delivers the care and the tools',players:[
+   {name:'Senior-living operators',role:'Residential & assisted living at scale.',ex:['Antara','Ashiana','Primus','Athulya','Epoch','Serene','Manasum'],themes:[3],cont:['assisted'],ins:['Premium end is mature/commoditised; biggest shared challenge is operations & service quality, not capital or demand.']},
+   {name:'Home-care providers',role:'Attendants & home nursing — the hands at the bedside.',ex:['Apollo Homecare'],themes:[2,3],cont:['home'],ins:['Keeps people out of expensive hospitals; demand far outstrips a deployment-ready workforce.']},
+   {name:'Transition / geriatric clinical',role:'Step-down, rehab and higher-acuity care.',ex:['Geri Care','Sukino / Skateboat-backed'],themes:[4,2],cont:['acute'],ins:['Clinical discipline + standardised documentation is the prerequisite for geographic scale.']},
+   {name:'AgeTech — engagement / community',role:'Interest-based communities; loneliness without the stigma.',ex:['Khyaal'],themes:[5,6],cont:['prevention','home'],ins:['Engagement is the harder, more valuable problem; healthcare is commoditised and accessible.']},
+   {name:'AgeTech — AI companion / voice',role:'Voice-first independence, built with seniors.',ex:['Careflick'],themes:[5],cont:['home'],ins:['90% own smartphones but 3 in 5 struggle; framed as “removes complexity”, not “companion”.']},
+   {name:'AgeTech — ambient sensing & safety',role:'Non-wearable monitoring, fall detection, SOS.',ex:['NoBlink.ai','Securico','Sompo sensors'],themes:[4,2],cont:['home','acute'],ins:['Sompo sensors save ~200 staff-hrs/facility/month and enable preventive intervention.']},
+   {name:'AgeTech — operator SaaS',role:'Ops, workflows, compliance for care operators.',ex:['RelyWorks / Xelpmoc'],themes:[7],cont:['assisted','home'],ins:['Fragmentation across silos is a core scaling barrier; “built for Bharat”.']},
+   {name:'AgeTech — travel & experiences',role:'Experience and contribution beyond care.',ex:['Marzi'],themes:[6],cont:['prevention'],ins:['Part of the purpose/engagement layer, not care delivery.']},
+   {name:'Medical equipment & mobility',role:'Beds, wheelchairs, hoists, home-care devices.',ex:['KM Biomed (care beds)','Vermeiren / Mobility Solutions','ClockHealth'],themes:[4],cont:['acute','home'],ins:['Dignity + independence framed as the product, not just the hardware.']},
+   {name:'Preventive / clinical ecosystem',role:'Prevention, early detection, end-to-end elder health.',ex:['Bridge Health'],themes:[4],cont:['prevention','acute'],ins:['Shift lifespan→healthspan; ~10yr gap between life and healthy-life expectancy.']},
+   {name:'Consultancies & research',role:'Frameworks, market data, design & architecture.',ex:['PwC (SCALE / Senior Care Compass)','JLL (Silver Economy)','Cushman','Colliers','Perkins Eastman','Holabird & Root'],themes:[7],cont:['prevention','assisted'],ins:['“AgeTech” is a label for investors, not a customer need (Rainmatter).']}
+ ]},
+ {id:'payer',name:'Payers',color:'#c76a12',tag:'Who pays — and how little they will',players:[
+   {name:'Adult children',role:'The real decision-makers for parent care.',ex:['(primary buyer)'],themes:[1,2],cont:['home','assisted','acute'],ins:['Compete with EMIs, education and essentials; cultural ₹5–10L for surgery vs resistance to ₹800/mo physio.']},
+   {name:'NRI / outstation families',role:'Pay to verify and coordinate care at a distance.',ex:['(distance buyer)'],themes:[2],cont:['home','assisted'],ins:['NRI returnee residents report transformative loneliness relief.']},
+   {name:'Employers / corporate',role:'Eldercare benefit, concierge, retirement health funds.',ex:['Google / PepsiCo / Amex concierge'],themes:[8,2],cont:['prevention','home'],ins:['A route around the individual affordability ceiling; EAPs miss daily coordination.']},
+   {name:'Insurers',role:'The missing payer that would unlock the mass market.',ex:['Bima','General Insurance Council working group'],themes:[1],cont:['acute'],ins:['Insurance gap is the binding constraint — out-of-pocket care limits demand to a premium segment.']},
+   {name:'Communities / RWAs',role:'Collective and mutual-accountability purchasing.',ex:['Community-based managed-care model floated'],themes:[8],cont:['home'],ins:['Products spanning 40–50yr age bands to spread risk.']},
+   {name:'Operators (B2B2C)',role:'Buy enablers, tech and standards on residents’ behalf.',ex:['Senior-living & home-care operators'],themes:[7],cont:['assisted'],ins:['The buyer for SaaS, certification and sensing layers.']}
+ ]},
+ {id:'receiver',name:'Receivers',color:'#3FA845',tag:'Who the care is for',players:[
+   {name:'Independent (60–69)',role:'Planning spending and care choices; mostly self-managing.',ex:[],themes:[1,3],cont:['prevention'],ins:['Affordability unclear; want transparent budgeting, not a forced product.']},
+   {name:'Rising-need (70–79)',role:'Rising daily support without family managing each task.',ex:[],themes:[2,3],cont:['home'],ins:['Small failures become crises without a reliable manager + backup cover.']},
+   {name:'High-acuity / frail (80+)',role:'Intimate support while retaining voice and dignity.',ex:[],themes:[4,5],cont:['acute','estate'],ins:['Hidden distress; “revenue is a byproduct of relationship”.']},
+   {name:'NRI returnees',role:'Return for care and connection.',ex:[],themes:[5],cont:['assisted'],ins:['High satisfaction; loneliness relief cited as transformative.']},
+   {name:'Seniors as a resource',role:'Experience, wisdom, capital — purpose/dignity/contribution.',ex:['“Evergreen economy” framing'],themes:[6],cont:['prevention'],ins:['Largely un-leveraged; the report’s most repeated under-served theme.']},
+   {name:'“Buying down” seniors',role:'Sell the large home, rent, invest the corpus.',ex:['Lease / life-rights models'],themes:[1,3],cont:['assisted'],ins:['Lease model blocked in India by no capital-gains benefit, no loans, ownership mindset.']}
+ ]}
+];
+
+const FORCES=[
+ {t:'Market size (directional)',c:'#6b6256',li:['~150–167M Indians aged 60+ today → ~346–347M by 2050 (~1 in 5).','Organised senior-living stock ~25,000 units.','Demand: 4–5 lakh (older est.) → 20 lakh+ (JLL). Numbers inconsistent in notes — directional only.']},
+ {t:'The continuum thesis',c:'#16C2B3',li:['The gap is the CONTINUUM — not housing alone or healthcare alone.','Connected: prevention → primary → hospital → rehab → home → assisted → memory → palliative.','Biggest 5–10yr opportunity (investor poll): integrated platforms combining real estate + care + tech.']},
+ {t:'SCALE framework (PwC)',c:'#F7941E',li:['S — Standards & policy','C — Capital & financing (affordability)','A — Assisted & continuum-of-care infrastructure','L — Labor & workforce','E — Enabling technology']},
+ {t:'Senior Care Compass (PwC)',c:'#7C4DD6',li:['Signals — what is changing?','Play — where is the opportunity?','Momentum — how to build around it?','Metrics — what to measure?','Goal: 10x more entrepreneurs in the sector.']},
+ {t:'Unit economics benchmarks',c:'#3B82E0',li:['Break-even ~40–45% occupancy; healthy 60–65%.','Assisted-living CAC ~₹38–50k (down from ~₹1L).','~120 units a sweet spot; occupancy follows a J-curve.','50%+ of sales from word of mouth; pre-sales hard before delivery.']},
+ {t:'Investor checklist',c:'#EA3B2E',li:['Founder quality (operator background preferred).','Willingness to pay at the asked price (real PMF).','Patient lifetime value — every person touched is recurring.','Clinical discipline + standardisation = the scale prerequisite.','Dominate one territory before expanding.']},
+ {t:'Geography',c:'#4FB63C',li:['Top-30 cities (Tier-1 + Tier-2) = the decade’s corridor.','South mature; North still category creation.','East weak even at Tier-1; strongest NW + South.','Tier-3/4 depend on healthcare infrastructure arriving first.']},
+ {t:'Cross-country playbooks',c:'#EC4899',li:['China (Orpea): 0→5,000 beds/8yr; hide the medical; insurer-led; educate all stakeholders.','S. Africa: family-office capital, lease model, ~120 units, life-rights, ~18% IRR (note likely garbled).','India (Antara): converted capital discount into a 65% maintenance discount to unlock velocity.']},
+ {t:'Willingness-to-pay reality',c:'#c76a12',li:['₹1,000–3,000/month is the dominant spend band; very few will pay ₹10k+.','₹5–10L for surgery, yet resistance to ₹800/month physiotherapy.','At ₹1L/month the paying segment is narrow — insurance gap binds the market.']},
+ {t:'“Relationship, not revenue”',c:'#2f7d35',li:['Revenue is a byproduct of relationship, not the goal.','“What are you doing to grow the relationship?” (investor principle).','Engagement is the harder and more valuable problem than healthcare — validating the emotional / purpose white space.']}
+];
+
+/* ---------- render ---------- */
+const stack=document.getElementById('stack');
+let activeCont=null, selCard=null;
+function buildFilter(){
+  const host=document.getElementById('contFilter');
+  CONT.forEach(c=>{const b=document.createElement('button');b.className='chip';b.setAttribute('aria-pressed','false');
+    b.innerHTML=`<i style="background:${c.c}"></i>${c.lab}`;
+    b.addEventListener('click',()=>{activeCont=(activeCont===c.id)?null:c.id;
+      host.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed','false'));
+      if(activeCont)b.setAttribute('aria-pressed','true');applyFilter();});
+    host.appendChild(b);});
+}
+function buildStack(){
+  LAYERS.forEach(L=>{const row=document.createElement('div');row.className='layer';row.style.borderLeftColor=L.color;
+    const lh=document.createElement('div');lh.className='lh';lh.innerHTML=`<div class="ln" style="color:${L.color}">${L.name}</div><div class="lt">${L.tag}</div>`;
+    const cards=document.createElement('div');cards.className='cards';
+    L.players.forEach((p,i)=>{const pid=L.id+'-'+i;const b=document.createElement('button');b.className='pcard';b.dataset.id=pid;b.dataset.cont=(p.cont||[]).join(',');
+      b.innerHTML=`<div class="pn">${p.name}</div>${p.ex&&p.ex.length?`<div class="pe">${p.ex.slice(0,2).join(' · ')}${p.ex.length>2?' …':''}</div>`:''}`;
+      b.addEventListener('click',()=>selectCard(L,p,pid));cards.appendChild(b);});
+    row.appendChild(lh);row.appendChild(cards);stack.appendChild(row);});
+}
+function applyFilter(){document.querySelectorAll('.pcard').forEach(el=>{
+  if(!activeCont){el.classList.remove('dim');return;}
+  const cs=(el.dataset.cont||'').split(',');el.classList.toggle('dim',!cs.includes(activeCont));});}
+function selectCard(L,p,pid){
+  selCard=pid;document.querySelectorAll('.pcard').forEach(e=>e.classList.toggle('sel',e.dataset.id===pid));
+  document.getElementById('detailHead').innerHTML=`<span class="d" style="background:${L.color}"></span>${p.name}`;
+  document.getElementById('detailMeta').textContent=p.role;
+  let html='';
+  if(p.ex&&p.ex.length){html+=`<p class="mini">Seen in the report</p><div class="exlist">${p.ex.map(e=>`<span class="ex">${e}</span>`).join('')}</div>`;}
+  if(p.ins&&p.ins.length){html+=`<p class="mini">Intelligence</p><ul class="ins">${p.ins.map(i=>`<li>${i}</li>`).join('')}</ul>`;}
+  html+=`<p class="mini">Touches opportunity themes</p><div class="tagrow">${(p.themes||[]).map(t=>`<span class="tg" style="background:${mixw(THEMEC[t],.85)};color:${THEMEC[t]==='#8a826f'?'#6b6256':THEMEC[t]}">${THEME[t]}</span>`).join('')||'<span class="kicker">—</span>'}</div>`;
+  html+=`<p class="mini">Care-continuum stage</p><div class="tagrow">${(p.cont||[]).map(c=>`<span class="tg" style="background:${mixw(contById[c].c,.85)};color:${contById[c].c}">${contById[c].lab}</span>`).join('')}</div>`;
+  document.getElementById('detailBody').innerHTML=html;
+}
+function mixw(hex,t){const h=hex.replace('#','');const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);
+  const R=Math.round(r+(255-r)*t),G=Math.round(g+(255-g)*t),B=Math.round(b+(255-b)*t);return `rgb(${R},${G},${B})`;}
+function buildForces(){const host=document.getElementById('forces');
+  FORCES.forEach(f=>{const d=document.createElement('div');d.className='fcard';
+    d.innerHTML=`<h3><i style="background:${f.c}"></i>${f.t}</h3><ul>${f.li.map(x=>`<li>${x}</li>`).join('')}</ul>`;host.appendChild(d);});}
+
+document.getElementById('foot').innerHTML='<b>How this connects back.</b> This is the value-chain lens, fully populated from the ASLI report and extended up into Policy and Capital. The three structural reads worth carrying into strategy: the <b>insurance gap</b> is the binding constraint on addressable market (so the insurer and employer payer layers matter more than another premium operator); the real opportunity is <b>continuum integration</b>, not another point solution; and the sector itself keeps saying <b>engagement and relationship</b> — not clinical care — is the harder, more valuable, under-served problem, which is exactly the emotional/purpose white space your canvases flag. Players and numbers are from the conference’s own notes; treat figures as directional.';
+
+buildFilter();buildStack();buildForces();
+</script>
+</body>
+</html>
